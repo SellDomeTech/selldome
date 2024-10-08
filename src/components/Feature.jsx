@@ -70,7 +70,6 @@ function Feature() {
       }
     }
 
-    // Reset values
     touchStartX.current = null;
     touchEndX.current = null;
   };
