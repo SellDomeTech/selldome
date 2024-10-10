@@ -1,5 +1,5 @@
 //Home.jsx
-import { useState } from "react";
+import { useEffect, useState } from 'react';
 import AboutUs from "../components/AboutUs";
 import Category from "../components/Category";
 import Discovery from "../components/Discovery";
@@ -16,14 +16,36 @@ import Work from "../components/Work";
 
 function Home() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isInHeader, setIsInHeader] = useState(true);
 
   const handleVideoPlayingChange = (isPlaying) => {
     setIsVideoPlaying(isPlaying);
   };
 
+  useEffect(() => {
+    const header = document.querySelector('header');
+    
+    const handleScroll = () => {
+      if (header) {
+        const headerBottom = header.offsetTop + header.offsetHeight;
+        const isStillInHeader = window.scrollY < headerBottom;
+        setIsInHeader(isStillInHeader);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const shouldShowTransparentNav = isVideoPlaying && isInHeader;
+
   return (
     <>
-      {isVideoPlaying ? <TransparentPageNav /> : <PageNav />}
+      {shouldShowTransparentNav ? <TransparentPageNav /> : <PageNav />}
       <Header onVideoPlayingChange={handleVideoPlayingChange} />
       <Main>
         <AboutUs />
